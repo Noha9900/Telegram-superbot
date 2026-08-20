@@ -1,0 +1,18 @@
+# assets/
+
+This folder is intentionally empty in the repo (git doesn't track empty
+directories, and these are binary/brand assets you should supply yourself).
+The bot works without them — features fall back to plain text / a generated
+canvas — but looks best with:
+
+| Path | Used by | Purpose |
+|---|---|---|
+| `assets/welcome_default.jpg` | `plugins/moderation.py` (welcomer) | Default welcome banner image, shown if a group hasn't set its own via `/setwelcome` (reply to a photo). |
+| `assets/invoice_template.png` | `utils/invoice.py` | Background template the VIP invoice/receipt is drawn onto. Recommended size: 1000x600px or similar 5:3 ratio. If missing, a plain dark canvas is generated instead. |
+| `assets/fonts/Regular.ttf` | `utils/invoice.py` | Body font for the invoice. |
+| `assets/fonts/Bold.ttf` | `utils/invoice.py` | Heading/label font for the invoice. |
+
+Paths are configurable via the `DEFAULT_WELCOME_BANNER`,
+`INVOICE_TEMPLATE_PATH`, `FONT_REGULAR_PATH`, and `FONT_BOLD_PATH`
+environment variables (see `.env.example`) if you'd rather store them
+elsewhere.
