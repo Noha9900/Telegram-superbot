@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: superbot_mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    command: ["--wiredTigerCacheSizeGB", "0.5"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  bot:
+    build: .
+    container_name: superbot_bot
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # Overrides .env's MONGO_URI to point at the compose-internal service name.
+      MONGO_URI: "mongodb://mongo:27017"
+    volumes:
+      - ./downloads:/app/downloads
+      - ./assets:/app/assets
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  mongo_data:
